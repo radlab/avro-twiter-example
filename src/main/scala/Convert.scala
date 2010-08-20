@@ -5,13 +5,20 @@ import com.googlecode.avro.runtime._
 
 object Convert {
   def main(args: Array[String]): Unit = {
+    org.apache.log4j.BasicConfigurator.configure()
+
     args.foreach(filename => {
-      val infile = new BufferedReader(new InputStreamReader(new FileInputStream(args)))
+      val infile = new BufferedReader(new InputStreamReader(new FileInputStream(filename)))
       val outfile = AvroOutFile[Tweet](new File(filename + ".avro"))
       var line = infile.readLine()
 
       while(line != null) {
-        outfile append new Tweet().parseJson(line) 
+        val tweet = try new Tweet().parseJson(line.replaceFirst("^START:", "")) catch {
+          case e => {println("parsing failed"); null}
+        }
+        try outfile append tweet catch {
+          case e => println("bad tweet due to " + e + " " + line)
+        }
         line = infile.readLine()
       }
 
