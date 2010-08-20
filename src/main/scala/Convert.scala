@@ -16,12 +16,15 @@ object Convert {
         val tweet = try new Tweet().parseJson(line.replaceFirst("^START:", "")) catch {
           case e => {println("parsing failed"); null}
         }
-        try outfile append tweet catch {
+        try {
+          tweet.toBytes //HACK: if you attempt to append an invalid tweet to the file it causes corruption.
+          outfile append tweet
+        } catch {
           case e => println("bad tweet due to " + e + " " + line)
         }
         line = infile.readLine()
       }
-
+      outfile.close()
     })
   }
 }
