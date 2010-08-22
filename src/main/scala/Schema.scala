@@ -16,7 +16,7 @@ case class User() extends AvroRecord {
   var geo_enabled: Boolean = false
   var url: Option[String] = None
   var favourites_count: Long = 0L
-  var protected_tweet: Boolean = false
+  var protected_tweet: Option[Boolean] = None
   var time_zone: Option[String] = None
   var name: String = null
   var statuses_count: Long = 0L
