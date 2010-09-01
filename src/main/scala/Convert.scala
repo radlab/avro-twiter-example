@@ -21,3 +21,16 @@ object Convert {
     })
   }
 }
+
+object AverageFollowers {
+  def main(args: Array[String]): Unit = {
+    args.foreach(filename => {
+      val infile = AvroInFile[Tweet](new File(filename)).counted
+      val totalFollowers = infile.map(_.user.followers_count).reduceLeft(_ + _)
+      val averageFollowers = totalFollowers / infile.count
+
+      println(totalFollowers)
+      println(averageFollowers)
+    })
+  }
+}
